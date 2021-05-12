@@ -183,8 +183,8 @@ def main_function(username):
 
         with client:
             print("thread", _thread.get_ident())
-            # check_and_join(client, grouplinks.group_link)
-            # client.loop.run_until_complete(interact(client, group_id, emoji.emojize(dial.content)))
+            check_and_join(client, grouplinks.group_link)
+            client.loop.run_until_complete(interact(client, group_id, emoji.emojize(dial.content)))
         sleep(dial.delay)
 
 # ---------------------------
