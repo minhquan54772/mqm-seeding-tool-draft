@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% block content %}
+<div class="container-fluid d-flex p-0">
+	<div class="col-6 col-md-4 px-2">
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Cấp quyền ADMIN:</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/setAdmin" method="post" name="setADForm">
+					<div class="form-group">
+						<label for="setAdmin">Nhập username cần cấp quyền ADMIN: </label>
+						<input type="text" name="setAdmin" id="setAdmin" class="form-control" placeholder="Nhập username" aria-describedby="helpId" />
+					</div>
+					<div>
+						<p class="form-text text-danger d-none" id="setADError"></p>
+					</div>
+					<button type="submit" class="btn btn-primary">Cấp quyền</button>
+				</form>
+			</div>
+		</div>
+		<!--  -->
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Thu hồi quyền Admin:</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/revokeAdmin" method="post" name="revokeADForm">
+					<div class="form-group">
+						<label for="revokeAdmin">Nhập username cần thu hồi quyền ADMIN:</label>
+						<input type="text" name="revokeAdmin" id="revokeAdmin" class="form-control" placeholder="Nhập username" aria-describedby="helpId" />
+					</div>
+					<div>
+						<p class="form-text text-danger d-none" id="revokeADError"></p>
+					</div>
+					<button type="submit" class="btn btn-primary">Thu hồi</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-8 px-2">
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Administrators:</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body table-responsive p-0">
+				<table class="table table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th>Username</th>
+							<th>Full Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for a in admin %}
+						<tr>
+							<td scope="row">{{ a['username'] }}</td>
+							<td>{{ a['fname'] }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Người dùng:</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body table-responsive p-0">
+				<table class="table table-striped">
+					<thead class="thead-light">
+						<tr>
+							<th>Username</th>
+							<th>Full Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for c in customer %}
+						<tr>
+							<td scope="row">{{ c['username'] }}</td>
+							<td>{{ c['fname'] }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %} {% block script %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock script %}

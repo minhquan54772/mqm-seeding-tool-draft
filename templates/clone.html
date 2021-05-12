@@ -1,0 +1,192 @@
+{% extends "base.html" %} {% block content %}
+<div class="container-fluid d-flex p-0">
+	<div class="col-12 col-md-3 px-2">
+    <div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Thêm Clone từ file</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/uploadUsersFile" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="usersfile">Chọn 'users.xlsx' file':</label>
+						<input type="file" class="form-control-file" name="usersfile" id="usersfile" placeholder="Browse" aria-describedby="fileHelpId" accept=".xls, .xlsx, .csv" />
+						<small id="fileHelpId" class="form-text text-muted"></small>
+					</div>
+					<button type="submit" class="btn btn-sm btn-primary">Thêm</button>
+				</form>
+			</div>
+		</div>
+    <!--  -->
+    <div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Thêm Clone</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/addUser" method="post" name="addCloneFrom">
+					<div class="form-group">
+						<label for="api_id">Nhập API ID:</label>
+						<input type="text" class="form-control" name="api_id" id="api_id" aria-describedby="api_id_help" placeholder="API ID" required />
+					</div>
+					<div class="form-group">
+						<label for="api_hash">Nhập API Hash:</label>
+						<input type="text" class="form-control" name="api_hash" id="api_hash" aria-describedby="api_hash-help" placeholder="API Hash" required />
+					</div>
+					<div class="form-group">
+						<label for="username">Nhập Username:</label>
+						<input type="text" class="form-control" name="username" id="username" aria-describedby="username_help" placeholder="Username" required />
+					</div>
+					<div class="form-group">
+						<label for="phone">Nhập số điện thoại:</label>
+						<input type="text" class="form-control" name="phone" id="phone" aria-describedby="phone_help" placeholder="Số điện thoại (tên session)" required />
+					</div>
+          <div>
+            <p class="text-danger d-none" id="addCloneError"></p>
+          </div>
+					<button type="submit" class="btn btn-sm btn-primary">Add Users</button>
+				</form>
+			</div>
+		</div>
+    <!--  -->
+	</div>
+	<div class="col-12 col-md-9 px-2">
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Danh Sách Clone</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modelId">
+						<i class="fa fa-trash-o" aria-hidden="true"></i>
+						Xoá tất cả
+					</button>
+					<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Xoá tất cả tài khoản?</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">Tất cả tài khoản sẽ bị xoá và không thể phục hồi hành động này.</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+									<a name="dlAllCloneBtn" id="dlAllCloneBtn" class="btn btn-danger" href="/deleteAllUsers" role="button">Xoá</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-striped">
+          <thead class="thead-light">
+            <tr>
+              <th>API ID</th>
+              <th>API Hash</th>
+              <th>Username</th>
+              <th>Số ĐT</th>
+              <th>Sửa</th> 
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr>
+              <td>{{ user['api_id'] }}</td>
+              <td>{{ user['api_hash'] }}</td>
+              <td>{{ user['username'] }}</td>
+              <td>{{ user['phone'] }}</td>
+              <td>
+                <!-- Edit modal -->
+                  <a type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editClone{{user.api_id}}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  </a>
+                  <div class="modal fade" id="editClone{{user.api_id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Sửa thông tin Clone.</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/editClone/{{user.id}}" method="post" name="editCloneForm">
+                            <div class="form-group">
+                              <label for="edit_api_id">Nhập API ID:</label>
+                              <input type="text" class="form-control" name="edit_api_id" id="edit_api_id" aria-describedby="api_id_help" value="{{user.api_id}}" required />
+                              <small id="api_id_help" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group">
+                              <label for="edit_api_hash">Nhập API Hash:</label>
+                              <input type="text" class="form-control" name="edit_api_hash" id="api_hash" aria-describedby="api_hash-help" value="{{user.api_hash}}" required />
+                              <small id="api_hash-help" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group">
+                              <label for="edit_username">Nhập Username:</label>
+                              <input type="text" class="form-control" name="edit_username" id="edit_username" aria-describedby="username_help" value="{{user.username}}" required />
+                              <small id="username_help" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group">
+                              <label for="edit_phone">Nhập Số ĐT:</label>
+                              <input type="text" class="form-control" name="edit_phone" id="edit_phone" aria-describedby="phone_help" value="{{user.phone}}" required />
+                              <small id="phone_help" class="form-text text-muted"></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Delete modal -->
+                  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#dlClone{{user.api_id}}">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
+                  <div class="modal fade" id="dlClone{{user.api_id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Xoá tài khoản Clone này?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Tài khoản "{{user.username}}" ({{user.api_id}}) sẽ bị xoá và không thể phục hồi hành động này. Bạn có chắc muốn xoá không?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                          <a name="deleteCloneBtn" id="deleteCloneBtn" class="btn btn-danger" href="/deleteClone/{{user.api_id}}" role="button">Xoá</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>			
+		</div>
+	</div>
+</div>
+{% endblock content %}
+{% block script %}
+  <script src="{{ url_for('static', filename='js/clone.js') }}"></script>
+{% endblock script %}

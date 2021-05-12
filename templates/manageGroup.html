@@ -1,0 +1,132 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container-fluid d-flex p-0">
+	<div class="col-6 col-md-4 px-2">
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Thêm Group với file</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/uploadGroupFile" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="groupfile">Chọn 'groups.xlsx' file:</label>
+						<input type="file" class="form-control-file" name="groupfile" id="groupfile" placeholder="Browse" aria-describedby="fileHelpId" accept=".xls, .xlsx, .csv" />
+						<small id="fileHelpId" class="form-text text-muted"></small>
+					</div>
+					<button type="submit" class="btn btn-primary">Thêm nhóm</button>
+				</form>
+			</div>
+		</div>
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Thêm nhóm</h3>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="collapse">
+						<i class="fas fa-minus"></i>
+					</button>
+					<button type="button" class="btn btn-tool btn-sm" data-card-widget="remove">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="card-body">
+				<form action="/addGroup" method="post" name="addGRForm" id="addGRForm">
+					<div class="form-group">
+						<label for="grouplink">Nhập vào Link của nhóm:</label>
+						<input type="text" class="form-control" name="grouplink" id="grouplink" aria-describedby="addGroupHelp" placeholder="Group link. VD: https://t.me/examplegroup" />
+						<p id="addGroupHelp" class="form-text text-danger d-none"></p>
+					</div>
+					<button type="submit" class="btn btn-primary">Thêm nhóm</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-8 px-2">
+		<div class="card mx-0">
+			<div class="card-header border-0">
+				<h3 class="card-title">Các nhóm</h3>
+				<div class="card-tools">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modelId">
+						<i class="fa fa-trash-o" aria-hidden="true"></i>
+						Xoá toàn bộ
+					</button>
+
+					<!-- Modal -->
+					<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Xoá toàn bộ nhóm?</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">Tất cả các nhóm sẽ bị xoá và không thể phục hồi hành động này.</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+									<a name="dlAllGroupBtn" id="dlAllGroupBtn" class="btn btn-danger" href="/deleteAllGroups" role="button">Xoá</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-body table-responsive p-0">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Tên nhóm</th>
+							<th>ID</th>
+							<th>Link</th>
+							<th>More</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for gr in groups %}
+						<tr>
+							<td>{{ gr.group_title }}</td>
+							<td>{{ gr.group_id }}</td>
+							<td>{{ gr.group_link }}</td>
+							<td>
+								<a type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete{{gr.group_id}}">
+									<i class="fa fa-trash-o" aria-hidden="true"></i>
+								</a>
+								<div class="modal fade" id="delete{{gr.group_id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Xoá nhóm này?</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<p>Nhóm "{{gr.group_title}}" sẽ bị xoá và không thể phục hồi hành động này.</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+												<a name="dlGroupBtn" id="dlGroupBtn{{gr.group_id}}" class="btn btn-danger" href="/deleteGroup/{{gr.group_id}}" role="button">Xoá</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %} {% block script %}
+<script src="{{ url_for('static', filename='js/group.js') }}"></script>
+{% endblock script %}

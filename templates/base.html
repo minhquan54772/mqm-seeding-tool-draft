@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{% if title %}
+		<title>{{ title }}</title>
+		{% else %}
+		<title>MQM Seeding Tool</title>
+		{% endif %}
+
+		<!-- Google Font: Source Sans Pro -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/fontawesome-free/css/all.min.css') }}" />
+		<!-- Ionicons -->
+		<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+		<!-- Tempusdominus Bootstrap 4 -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}" />
+		<!-- iCheck -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" />
+		<!-- JQVMap -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/jqvmap/jqvmap.min.css') }}" />
+		<!-- Theme style -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'dist/css/adminlte.min.css') }}" />
+		<!-- overlayScrollbars -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}" />
+		<!-- Daterange picker -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/daterangepicker/daterangepicker.css') }}" />
+		<!-- summernote -->
+		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/summernote/summernote-bs4.min.css') }}" />
+		<!-- Pure Bootstrap 4 -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+			integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+			crossorigin="anonymous"
+		/>
+		<!-- Icon -->
+		<link rel="shortcut icon" href="{{url_for('static', filename = 'dist/img/favicon.ico')}}" type="image/x-icon" />
+		<link rel="icon" href="{{url_for('static', filename = 'dist/img/favicon.ico')}}" type="image/x-icon" />
+		<!-- FontAwesome 4 -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+	</head>
+	<body class="hold-transition sidebar-mini layout-fixed">
+		<div class="wrapper">
+			<!-- Navbar -->
+			<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+				<!-- Left navbar links -->
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+					</li>
+					<li class="nav-item d-none d-sm-inline-block">
+						<a href="/index" class="nav-link">Home</a>
+					</li>
+				</ul>
+
+				<!-- Right navbar links -->
+				<div class="navbar-nav ml-auto">
+					<!-- SEARCH FORM -->
+					<form class="form-inline ml-3">
+						<div class="input-group input-group-sm">
+							<input class="form-control form-control-navbar" type="search" placeholder="Tìm kiếm" aria-label="Search" />
+							<div class="input-group-append">
+								<button class="btn btn-navbar" type="submit">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- Right navbar links -->
+			</nav>
+			<!-- /.navbar -->
+
+			<!-- Main Sidebar Container -->
+			<aside class="main-sidebar sidebar-dark-primary elevation-4">
+				<!-- Brand Logo -->
+				<a href="/index" class="brand-link">
+					<img src="{{ url_for('static', filename = 'dist/img/Logo.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: 1" />
+					<span class="brand-text font-weight-light">MQM Seeding Tool</span>
+				</a>
+
+				<!-- Sidebar -->
+				<div class="sidebar">
+					<nav class="mt-2">
+						<ul
+							class="nav nav-pills nav-sidebar nav-child-indent flex-column"
+							data-widget="treeview"
+							role="menu"
+							data-accordion="false"
+							style="border-bottom: 0.1px solid rgba(255, 255, 255, 0.1)"
+						>
+							<li class="nav-item">
+								<a href="#" class="nav-link">
+									<img src="{{ url_for('static', filename = 'dist/img/avatar.png') }}" class="img-circle elevation-2" alt="User Image" width="30" height="30" />
+									<p>Xin chào, {{session['username']}} <i class="right fas fa-angle-left"></i></p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a class="nav-link" href="/changePassword" data-toggle="modal" data-target="#changePass">
+											<i class="fa fa-pencil" aria-hidden="true"></i>
+											<p>Đổi mật khẩu</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="/logout">
+											<i class="fa fa-sign-out" aria-hidden="true"></i>
+											<p>Đăng xuất</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<br />
+						<ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu" data-accordion="false">
+							<!-- ADMIN -->
+							{% if session['isAdmin'] == 1 %}
+							<li class="nav-item">
+								<a href="#" class="nav-link active">
+									<i class="fa fa-cogs nav-icon" aria-hidden="true"></i>
+									<p>ADMIN<i class="right fas fa-angle-left"></i></p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/setAdmin" class="nav-link">
+											<i class="fa fa-cog nav-icon" aria-hidden="true"></i>
+											<p>Cấp quyền ADMIN</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/register" class="nav-link">
+											<i class="fa fa-user-plus nav-icon" aria-hidden="true"></i>
+											<p>Tạo tài khoản</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/manageCloneAccount" class="nav-link">
+											<i class="fa fa-address-book-o nav-icon" aria-hidden="true"></i>
+											<p>Tài khoản Clone</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							{% endif %}
+							<!-- END ADMIN -->
+
+							<!-- Groups -->
+							{% if request.endpoint == 'manageGroups' %}
+							<li class="nav-item">
+								<a href="/manageGroups" class="nav-link active">
+									<i class="fa fa-users nav-icon" aria-hidden="true"></i>
+									<p>Quản lý nhóm</p>
+								</a>
+							</li>
+							{% else %}
+							<li class="nav-item">
+								<a href="/manageGroups" class="nav-link">
+									<i class="fa fa-users nav-icon" aria-hidden="true"></i>
+									<p>Quản lý nhóm</p>
+								</a>
+							</li>
+							{% endif %}
+							<!-- END Groups -->
+
+							<!-- Scenario -->
+							{% if request.endpoint == 'manageScenario' %}
+							<li class="nav-item">
+								<a href="/manageScenario" class="nav-link active">
+									<i class="fa fa-comment nav-icon" aria-hidden="true"></i>
+									<p>Quản lý hội thoại</p>
+								</a>
+							</li>
+							{% else %}
+							<li class="nav-item">
+								<a href="/manageScenario" class="nav-link">
+									<i class="fa fa-comment nav-icon" aria-hidden="true"></i>
+									<p>Quản lý hội thoại</p>
+								</a>
+							</li>
+							{% endif %}
+							<!-- END Scenario -->
+
+							<!-- Download Files -->
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="fa fa-download nav-icon" aria-hidden="true"></i>
+									<p>Download Files<i class="right fas fa-angle-left"></i></p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/download_dialog" class="nav-link">
+											<i class="fa fa-file-excel-o nav-icon" aria-hidden="true"></i>
+											<p>Dialog.xlsx</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/download_groups" class="nav-link">
+											<i class="fa fa-file-excel-o nav-icon" aria-hidden="true"></i>
+											<p>Groups.xlsx</p>
+										</a>
+									</li>
+									{% if session['isAdmin'] == 1 %}
+									<li class="nav-item">
+										<a href="/download_users" class="nav-link">
+											<i class="fa fa-file-excel-o nav-icon" aria-hidden="true"></i>
+											<p>Users.xlsx</p>
+										</a>
+									</li>
+									{% endif %}
+								</ul>
+							</li>
+							<!-- /Download Files  -->
+						</ul>
+					</nav>
+					<!-- /.sidebar-menu -->
+				</div>
+				<!-- /.sidebar -->
+			</aside>
+
+			<div class="content-wrapper">
+				<div class="modal fade" id="changePass" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Đổi mật khẩu.</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form action="/changePassword" method="post">
+									<div class="form-group">
+										<label for="currentPass">Mật khẩu hiện tại:</label>
+										<input type="password" class="form-control" name="currentPass" id="currentPass" aria-describedby="helpId" placeholder="Current password" />
+										<small id="helpId" class="form-text text-muted"></small>
+									</div>
+									<div class="form-group">
+										<label for="newPass">Mật khẩu mới</label>
+										<input type="password" class="form-control" name="newPass" id="newPass" aria-describedby="helpId" placeholder="New password" />
+										<small id="helpId" class="form-text text-muted"></small>
+									</div>
+									<div class="form-group">
+										<label for="newPassCf">Nhập lại mật khẩu mới</label>
+										<input type="password" class="form-control" name="newPassCf" id="newPassCf" aria-describedby="helpId" placeholder="Confirm new password" />
+										<small id="helpId" class="form-text text-muted"></small>
+									</div>
+									<button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% block content %} {% endblock content %}
+			</div>
+
+			<!-- <footer class="main-footer"> -->
+			<nav class="navbar navbar-expand-sm justify-content-center">
+				<a class="nav-link active" href="https://dichvutelegram.pro/"><i class="fa fa-home" aria-hidden="true"></i> Homepage</a>
+				<a class="nav-link" href="#">Contact</a>
+				<a class="nav-link disabled" href="#">Disabled link</a>
+			</nav>
+			<!-- </footer> -->
+		</div>
+
+		<!-- jQuery -->
+		<script src="{{ url_for('static', filename = 'plugins/jquery/jquery.min.js') }}"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="{{ url_for('static', filename = 'plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+		<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+		<script>
+			$.widget.bridge("uibutton", $.ui.button);
+		</script>
+		<!-- Bootstrap 4 -->
+		<script src="{{ url_for('static', filename = 'plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+		<!-- ChartJS -->
+		<script src="{{ url_for('static', filename = 'plugins/chart.js/Chart.min.js') }}"></script>
+		<!-- Sparkline -->
+		<script src="{{ url_for('static', filename = 'plugins/sparklines/sparkline.js') }}"></script>
+		<!-- JQVMap -->
+		<script src="{{ url_for('static', filename = 'plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename = 'plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+		<!-- jQuery Knob Chart -->
+		<script src="{{ url_for('static', filename = 'plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+		<!-- daterangepicker -->
+		<script src="{{ url_for('static', filename = 'plugins/moment/moment.min.js') }}"></script>
+		<script src="{{ url_for('static', filename = 'plugins/daterangepicker/daterangepicker.js') }}"></script>
+		<!-- Tempusdominus Bootstrap 4 -->
+		<script src="{{ url_for('static', filename = 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+		<!-- Summernote -->
+		<script src="{{ url_for('static', filename = 'plugins/summernote/summernote-bs4.min.js') }}"></script>
+		<!-- overlayScrollbars -->
+		<script src="{{ url_for('static', filename = 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+		<!-- AdminLTE App -->
+		<script src="{{ url_for('static', filename = 'dist/js/adminlte.js') }}"></script>
+		<!-- AdminLTE for demo purposes -->
+		<script src="{{ url_for('static', filename = 'dist/js/demo.js') }}"></script>
+		<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+		<script src="{{ url_for('static', filename = 'dist/js/pages/dashboard.js') }}"></script>
+		<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+		{% block script %} {% endblock script %}
+	</body>
+</html>
