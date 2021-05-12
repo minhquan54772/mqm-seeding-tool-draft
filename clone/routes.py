@@ -20,7 +20,6 @@ def uploadUsersFile():
         if usersfile:
             filename = secure_filename(usersfile.filename)
             path = app.config["UPLOAD_FOLDER"] + "/" + session["username"]
-            # path = app.config["UPLOAD_FOLDER"] + "\\" + session["username"]
             usersfile.save(os.path.join(path, filename))
 
             # filepath = path + "\\" + filename # Windows
@@ -28,10 +27,11 @@ def uploadUsersFile():
             users = getExcel(filepath)
 
             for user in users:
-                model.Clone.addClone(user[0], user[1], user[2], user[3], user[4])
+                print(user)
+                model.Clone.addClone(int(user[0]), user[1], user[2], user[3], user[4])
                 # Corresponding with Excel's columns file
-                # (user[0], user[1],    user[2],    user[3],    user[4])
-                #  STT      api_id      api_hash    name        sdt         
+                # (user[0], user[1],    user[2],    user[3])
+                #   api_id    api_hash    name        sdt
 
     return redirect(url_for("manageCloneAccount"))
 

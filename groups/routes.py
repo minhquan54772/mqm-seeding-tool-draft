@@ -53,12 +53,13 @@ def uploadGroupFile():
 @app.route("/addGroup", methods=["GET", "POST"])
 def addGroup():
     group_link = request.form["grouplink"]
-    client = TelegramClient("ToGetGroupID", 4030475, "d8d57cfa02a809076c4106cafb5a02ca")
+    client = TelegramClient("ToGetGroupID", 3090444, "d9815b9e9afda43ea26738f9000c2439")
     with client:
         join = check_and_join(client, group_link)
         return Group.addGroup(
             session["username"], join["group_id"], join["group_title"], group_link
         )
+
 
 @app.route("/deleteGroup/<id>")
 def deleteGroup(id):

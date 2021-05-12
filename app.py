@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import asyncio
 import emoji
@@ -14,8 +15,12 @@ from functools import wraps
 from flask.helpers import send_file
 from telethon.sync import TelegramClient
 from telethon.tl.types import ChatInvite, ChatInviteAlready
-from telethon.tl.functions.messages import CheckChatInviteRequest, ImportChatInviteRequest
+from telethon.tl.functions.messages import (
+    CheckChatInviteRequest,
+    ImportChatInviteRequest,
+)
 from tornado.platform.asyncio import AnyThreadEventLoopPolicy
+
 asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
 
 
@@ -27,6 +32,7 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             return redirect("/login")
+
     return wrap
 
 
@@ -37,11 +43,16 @@ def admin_required(f):
             return f(*args, **kwargs)
         else:
             return redirect("/index")
+
     return wrap
 
 
 # FLASK ROUTES ------------------------------------------------------------------------------------------
-UPLOAD_FOLDER = "uploaded_files"
+try:
+    UPLOAD_FOLDER = "uploaded_files"
+except:
+    os.makedirs("uploaded_files")
+    UPLOAD_FOLDER = "uploaded_files"
 
 app = Flask(__name__)
 app.secret_key = b"\xa3\x92.\x8b\\\x06\x17\x9e1\x1c4\xb6\xf2\xff}\xfb"
@@ -68,6 +79,8 @@ def getExcel(file):
     data = pd.read_excel(file)
     val = data.values.tolist()
     return val
+
+
 # end database functions -------------
 
 # -------------------------------------------------------------------
@@ -81,8 +94,11 @@ async def interact(client, group_id, content):
             content,
         )
     except:
-        print("Something happend with this interact, the clone may die, please check again!")
+        print(
+            "Something happend with this interact, the clone may die, please check again!"
+        )
         pass
+
 
 def check_and_join(client, group_link):
     try:
@@ -121,26 +137,37 @@ def check_and_join(client, group_link):
             group_id = "-" + str(check.chats[0].id)
             return {"group_id": group_id, "group_title": group_title}
 
+
 def check_expired_time(register_time, total_delays_seconds, day_left):
     now = datetime.today()
-    check_days = register_time + timedelta(days = day_left)
-    if now > check_days: 
+    check_days = register_time + timedelta(days=day_left)
+    if now > check_days:
         print("Service time expired, please buy more!!", check_days)
         return False
-    elif now + timedelta(seconds = total_delays_seconds) > check_days:
-        print("Converstation time is exceeding service time limit, please change delays time.")
+    elif now + timedelta(seconds=total_delays_seconds) > check_days:
+        print(
+            "Converstation time is exceeding service time limit, please change delays time."
+        )
         return False
     else:
         return True
 
-def check_all_condition(username):    
+
+def check_all_condition(username):
     dialogue = Dialog.get_all_message(username)
-    register_time, sentences_per_day, clone_limit, effective_days, _, _ = Customer.return_value(username)
+    (
+        register_time,
+        sentences_per_day,
+        clone_limit,
+        effective_days,
+        _,
+        _,
+    ) = Customer.return_value(username)
     total_delays_seconds = 0
     clone_number = set()
     group_number = set()
     for dial in dialogue:
-        total_delays_seconds += dial.delay # 15
+        total_delays_seconds += dial.delay  # 15
         clone_number.add(dial.user_id)
         group_number.add(dial.group_id)
     time_check = datetime.now()
@@ -148,23 +175,29 @@ def check_all_condition(username):
     if len(clone_number) <= clone_limit:
         print(">> 1. First check: Clone number is less than clone limit: Success!")
     else:
-        return str("Số lượng Clone vượt quá giới hạn dịch vụ. Vui lòng kiểm tra lại Clone tại Quản lý hội thoại.") 
+        return str(
+            "Số lượng Clone vượt quá giới hạn dịch vụ. Vui lòng kiểm tra lại Clone tại Quản lý hội thoại."
+        )
 
     if len(group_number) < 2:
         print(">> 2. Second check: Only one Group: Success!")
-    else: 
-        return str("Chỉ có thể thực hiện cuộc hội thoại trong một nhóm duy nhất. Vui lòng kiểm tra lại Group ID tại Quản lý hội thoại.")
+    else:
+        return str(
+            "Chỉ có thể thực hiện cuộc hội thoại trong một nhóm duy nhất. Vui lòng kiểm tra lại Group ID tại Quản lý hội thoại."
+        )
 
     # Caculate service time expired and clone limit  -----------------------------------------------------
     if check_expired_time(register_time, total_delays_seconds, effective_days) == True:
         print(">> 3. Third check: In time of service: Success!")
     else:
-        return str("Dịch vụ đã hết hạn. Xin vui lòng mua thêm.") 
+        return str("Dịch vụ đã hết hạn. Xin vui lòng mua thêm.")
     # Caculate number of sentences left --------------------------------------------------------------
     if Customer.update_sentences(username, used_sentences) == True:
         print(">> 4. Fourth check: Sentences is in number of service: Success!")
     else:
-        return str("Số lượng câu thoại vượt quá giới hạn. Vui lòng kiểm tra lại số lượng câu tại Quản lý hội thoại.")
+        return str(
+            "Số lượng câu thoại vượt quá giới hạn. Vui lòng kiểm tra lại số lượng câu tại Quản lý hội thoại."
+        )
 
     return True, [used_sentences, total_delays_seconds]
 
@@ -173,10 +206,11 @@ def main_function(username):
     dialogue = Dialog.get_all_message(username)
     for dial in dialogue:
         user = Clone.getCloneWithID(dial.user_id)
+        print(user.phone)
         group_id = int(dial.group_id)
         grouplinks = Group.getGroupWithID(group_id)
         client = TelegramClient(
-            session="session/{}".format(user.phone),
+            session="{}".format(user.phone[2::]),
             api_id=int(user.api_id),
             api_hash=user.api_hash,
         )
@@ -184,10 +218,14 @@ def main_function(username):
         with client:
             print("thread", _thread.get_ident())
             check_and_join(client, grouplinks.group_link)
-            client.loop.run_until_complete(interact(client, group_id, emoji.emojize(dial.content)))
+            client.loop.run_until_complete(
+                interact(client, group_id, emoji.emojize(dial.content))
+            )
         sleep(dial.delay)
 
+
 # ---------------------------
+
 
 @app.route("/")
 def main():
@@ -200,21 +238,42 @@ def index():
     # check admin pack
     Customer.admin_pack()
     username = session["username"]
-    try:
-        group_id = Dialog.get_group_id(username)
-        register_time, sentences_per_day, clone_limit, effective_days, vip_pack, \
-                                effective_days = Customer.return_value(username) 
-        sentences_left = Customer.sentences_check(username)
-        groups = Group.getAllGroup(session["username"])
+    # try:
+    # group_id = Dialog.get_group_id(username)
+    (
+        register_time,
+        sentences_per_day,
+        clone_limit,
+        effective_days,
+        vip_pack,
+        effective_days,
+    ) = Customer.return_value(username)
+    print(
+        register_time,
+        sentences_per_day,
+        clone_limit,
+        effective_days,
+        vip_pack,
+        effective_days,
+    )
+    sentences_left = Customer.sentences_check(username)
+    groups = Group.getAllGroup(session["username"])
 
-        return render_template(
-            "index.html", groups = groups, username = username, sentences_left=sentences_left, 
-            register_time = register_time.date(), sentences_per_day = sentences_per_day, 
-            clone_limit = clone_limit, effective_days = effective_days, vip_pack = vip_pack
-            )
-    except:
-        pass
-        return render_template("index.html")
+    return render_template(
+        "index.html",
+        groups=groups,
+        username=username,
+        sentences_left=sentences_left,
+        register_time=register_time.date(),
+        sentences_per_day=sentences_per_day,
+        clone_limit=clone_limit,
+        effective_days=effective_days,
+        vip_pack=vip_pack,
+    )
+    # except:
+    #     print("pass")
+    #     pass
+    #     return render_template("index.html")
 
 
 @app.route("/manageCloneAccount")
@@ -267,8 +326,8 @@ def start():
     checker = check_all_condition(username)
     if checker[0] is True:
         flash("Đang thực hiện hội thoại. . . ")
-        _thread.start_new_thread(main_function, (username, ) )
-    else: 
+        _thread.start_new_thread(main_function, (username,))
+    else:
         flash(checker)
     return redirect(url_for("index"))
 
@@ -283,18 +342,29 @@ def scheduler():
         datetime_str = date + " " + time + ":00"
         datetime_dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
         flash("Cuộc hội thoại đã được lên lịch thành công!")
-        scheduled = _thread.start_new_thread(wait, (username, datetime_dt, ))
-        return render_template("index.html", datetime_dt = datetime_dt,
-                                used_sentences = checker[1][0], total_delays_seconds = checker[1][1])
+        scheduled = _thread.start_new_thread(
+            wait,
+            (
+                username,
+                datetime_dt,
+            ),
+        )
+        return render_template(
+            "index.html",
+            datetime_dt=datetime_dt,
+            used_sentences=checker[1][0],
+            total_delays_seconds=checker[1][1],
+        )
     else:
         flash(checker)
         return redirect("/index")
 
+
 def wait(username, dt):
     now = datetime.now()
     sleep((dt - now).total_seconds())
-    
-    main_function(username) 
+    main_function(username)
+
 
 from groups import routes
 from dialog import routes

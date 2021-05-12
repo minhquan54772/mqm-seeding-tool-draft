@@ -1,12 +1,10 @@
-{% extends 'base.html' %} {% block content %}
-
-{% for message in get_flashed_messages() %}
-	<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  		{{ message }}
-  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    			<span aria-hidden="true">&times;</span>
-  			</button>
-	</div>
+{% extends 'base.html' %} {% block content %} {% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	{{ message }}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
 
 {% endfor %}
 
@@ -29,19 +27,35 @@
 				<form action="/schedule-tasks" method="post">
 					<div class="form-group">
 						<label for="datepicker">Chọn ngày:</label>
-						<input type="date" class="form-control" name="datepicker" id="datepicker" aria-describedby="helpId" placeholder="ngày/ngày/năm" required/>
+						<input
+							type="date"
+							class="form-control"
+							name="datepicker"
+							id="datepicker"
+							aria-describedby="helpId"
+							placeholder="ngày/ngày/năm"
+							required
+						/>
 						<small id="helpId" class="form-text text-muted"></small>
 					</div>
 					<div class="form-group">
 						<label for="timepicker">Chọn giờ:</label>
-						<input type="time" class="form-control" name="timepicker" id="timepicker" aria-describedby="helpId" placeholder="giờ:phút" required/>
+						<input
+							type="time"
+							class="form-control"
+							name="timepicker"
+							id="timepicker"
+							aria-describedby="helpId"
+							placeholder="giờ:phút"
+							required
+						/>
 						<small id="helpId" class="form-text text-muted"></small>
 					</div>
-					<button type="submit" class="btn btn-info">
-						<i class="fa fa-clock-o" aria-hidden="true"></i> Lên lịch</button>
-					<a name="startBtn" id="startBtn" class="btn btn-success" href="/start" role="button"><i class="fa fa-comment" aria-hidden="true"></i> Gửi ngay</a>
-					<script>
-					</script>
+					<button type="submit" class="btn btn-info"><i class="fa fa-clock-o" aria-hidden="true"></i> Lên lịch</button>
+					<a name="startBtn" id="startBtn" class="btn btn-success" href="/start" role="button"
+						><i class="fa fa-comment" aria-hidden="true"></i> Gửi ngay</a
+					>
+					<script></script>
 				</form>
 			</div>
 		</div>
@@ -50,7 +64,7 @@
 			<div class="card-header border-0">
 				<h3 class="card-title">Thông tin người dùng</h3>
 				<div class="card-tools">
-					<button type="submit" class="btn btn-outline-primary btn-sm" >
+					<button type="submit" class="btn btn-outline-primary btn-sm">
 						<i class="fas fa-sync-alt"></i>
 						<a onClick="window.location.reload()">Cập nhật</a>
 					</button>
@@ -86,7 +100,6 @@
 		</div>
 	</div>
 
-
 	<div class="col-md-8 px-2">
 		<div class="card mx-0">
 			<div class="card-header border-0">
@@ -103,56 +116,23 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>Giời gian lên lịch</th>
+							<th>Thời gian lên lịch</th>
 							<th>Số câu</th>
 							<th>Thời gian hội thoại (s)</th>
-							<th></th>
 						</tr>
 					</thead>
 
 					<tbody>
-						<!-- Jinja here -->
-						<!-- {% for gr in groups %} -->
 						<tr>
-							<!-- <td>{{ gr.group_id}}</td> -->
-							<!-- <td>{{ gr.group_title }}</td> -->
-							<!-- <td>{{ gr.group_link }}</td> -->
 							<td>{{ datetime_dt }}</td>
 							<td>{{ used_sentences }}</td>
 							<td>{{ total_delays_seconds }}</td>
-							<!-- <td>
-								<a type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete{{gr.group_id}}">
-									<i class="fas fa-power-off" aria-hidden="true"></i>
-								</a>
-								<div class="modal fade" id="delete{{gr.group_id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title">Cancel this Scheduled?</h5>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-											</div>
-											<div class="modal-body">
-												<p>Scheduled "{{gr.group_title}}" will be deleted and this action can not be undone.</p>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-												<a name="dlGroupBtn" id="dlGroupBtn{{gr.group_id}}" class="btn btn-danger" href="/deleteGroup/{{gr.group_id}}" role="button">Delete</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</td> -->
 						</tr>
-						<!-- {% endfor %} -->
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
-
-
 </div>
 
 {% endblock content %} {% block script %}
