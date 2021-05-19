@@ -3,6 +3,7 @@ import pandas as pd
 import asyncio
 import emoji
 import _thread
+import telethon
 
 from datetime import datetime, timedelta
 from telethon.tl.functions.channels import JoinChannelRequest
@@ -223,26 +224,36 @@ def check_all_condition(username):
     return True, [used_sentences, total_delays_seconds]
 
 
+def check_banned(client, phone_number):
+    if not client.is_user_authorized():
+        try:
+            client.send_code_request(phone_number)
+        except telethon.errors.PhoneNumberBannedError:
+            print(">> Phone number is banned. Skip this Clone!")
+            client.disconnect()
+            return False
+
+
 def main_function(username):
     dialogue = Dialog.get_all_message(username)
     for dial in dialogue:
         user = Clone.getCloneWithID(dial.user_id)
-        print(user.phone)
+        session= "session/" + "{}".format(user.phone)
+        api_id= int(user.api_id) 
+        api_hash= user.api_hash 
+
+        phone_number = "84" + str(user.phone)
         group_id = int(dial.group_id)
         grouplinks = Group.getGroupWithID(group_id)
-        client = TelegramClient(
-            session="{}".format(user.phone[2::]),
-            api_id=int(user.api_id),
-            api_hash=user.api_hash,
-        )
-
-        with client:
-            print("thread", _thread.get_ident())
+        client = TelegramClient(session = str(session), api_id = api_id, api_hash = api_hash)
+        print("Clone", user.id)
+        client.connect()
+        if check_banned(client, phone_number) is not False:
             check_and_join(client, grouplinks.group_link)
-            client.loop.run_until_complete(
-                interact(client, group_id, emoji.emojize(dial.content))
-            )
-        sleep(dial.delay)
+            client.loop.run_until_complete(interact(client, group_id, emoji.emojize(dial.content)))
+            client.disconnect()
+            sleep(dial.delay)
+
 
 
 # ---------------------------
