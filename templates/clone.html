@@ -96,6 +96,7 @@
         <table class="table table-striped">
           <thead class="thead-light">
             <tr>
+              <th>STT</th>
               <th>API ID</th>
               <th>API Hash</th>
               <th>Username</th>
@@ -106,6 +107,7 @@
           <tbody>
             {% for user in users %}
             <tr>
+              <td>{{ user['id'] }}</td>
               <td>{{ user['api_id'] }}</td>
               <td>{{ user['api_hash'] }}</td>
               <td>{{ user['username'] }}</td>
