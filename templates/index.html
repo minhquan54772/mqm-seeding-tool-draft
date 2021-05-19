@@ -7,7 +7,6 @@
 </div>
 
 {% endfor %}
-
 <div class="container-fluid d-flex p-0">
 	<div class="col-6 col-md-4">
 		<!-- Schedule -->
@@ -79,20 +78,28 @@
 							<th>{{ vip_pack|upper }}</th>
 						</tr>
 						<tr>
-							<td scope="row">Thời gian đăng kí:</td>
-							<th>{{ register_time }}</th>
+							<td scope="row">Số Clone phục vụ:</td>
+							<th>{{ clone_limit }}</th>
 						</tr>
 						<tr>
 							<td scope="row">Thời gian dịch vụ(ngày):</td>
 							<th>{{ effective_days }}</th>
 						</tr>
 						<tr>
-							<td scope="row">Số Clone phục vụ:</td>
-							<th>{{ clone_limit }}</th>
-						</tr>
-						<tr>
 							<td scope="row">Số câu thoại còn lại:</td>
 							<th>{{ sentences_left }}</th>
+						</tr>
+						<tr>
+							<td scope="row">Thời gian đăng kí:</td>
+							<th>{{ register_time }}</th>
+						</tr>
+						<tr>
+							<td scope="row">Thời gian hết hạn:</td>
+							<th>{{ expired_date }}</th>
+						</tr>
+						<tr>
+							<td scope="row">Thời gian còn lại(ngày):</td>
+							<th>{{ remaining_days }}</th>
 						</tr>
 					</tbody>
 				</table>

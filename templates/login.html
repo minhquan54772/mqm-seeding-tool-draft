@@ -6,11 +6,17 @@
 		<title>Log in | MQM Seeding Tool</title>
 
 		<!-- Google Font: Source Sans Pro -->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+		/>
 		<!-- Font Awesome -->
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/fontawesome-free/css/all.min.css') }}" />
 		<!-- icheck bootstrap -->
-		<link rel="stylesheet" href="{{ url_for('static', filename = 'plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" />
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename = 'plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}"
+		/>
 		<!-- Theme style -->
 		<link rel="stylesheet" href="{{ url_for('static', filename = 'dist/css/adminlte.min.css') }}" />
 	</head>
@@ -18,7 +24,14 @@
 		<div class="login-box">
 			<div class="login-logo">
 				<a href="#">
-					<img src="{{ url_for('static', filename = 'dist/img/Logo.png') }}" alt="Logo" class="brand-image img-circle elevation-3" width="30" height="30" style="opacity: 1" />
+					<img
+						src="{{ url_for('static', filename = 'dist/img/Logo.png') }}"
+						alt="Logo"
+						class="brand-image img-circle elevation-3"
+						width="30"
+						height="30"
+						style="opacity: 1"
+					/>
 					<span>MQM Seeding Tool</span>
 				</a>
 			</div>
@@ -48,21 +61,29 @@
 							<p class="text-danger d-none" id="loginError"></p>
 						</div>
 						<div class="row">
-							<div class="col-8">
+							<div class="col-7">
 								<div class="icheck-primary">
 									<input type="checkbox" id="remember" />
 									<label for="remember"> Lưu tài khoản </label>
 								</div>
 							</div>
-							<!-- /.col -->
-							<div class="col8">
-								<button type="submit" class="btn btn-primary"> Đăng nhập </button>
+							<div class="col-5">
+								<button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
 							</div>
-							<!-- /.col -->
 						</div>
 					</form>
 				</div>
-				<!-- /.login-card-body -->
+				<div class="card-footer">
+					{% for message in get_flashed_messages() %}
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						{{message}}
+					</div>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
 		<!-- /.login-box -->

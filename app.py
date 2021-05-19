@@ -36,6 +36,26 @@ def login_required(f):
     return wrap
 
 
+# def expired_check(f):
+#     @wraps(f)
+#     def wrap(*args, **kwargs):
+#         if remaining_days > 0:
+#             if remaining_days <= 5:
+#                 flash(
+#                     "Tài khoản của bạn sắp hết hạn sử dụng. Vui lòng liên hệ xxx để gia hạn"
+#                 )
+#                 return f(*args, **kwargs)
+#             else:
+#                 return f(*args, **kwargs)
+#         else:
+#             flash(
+#                 "Tài khoản của bạn đã hết hạn sử dụng. Vui lòng liên hệ xxx để gia hạn."
+#             )
+#             return redirect("/login")
+
+#     return wrap
+
+
 def admin_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -160,8 +180,9 @@ def check_all_condition(username):
         sentences_per_day,
         clone_limit,
         effective_days,
-        _,
-        _,
+        vip_pack,
+        expired_date,
+        remaining_days,
     ) = Customer.return_value(username)
     total_delays_seconds = 0
     clone_number = set()
@@ -238,6 +259,7 @@ def index():
     # check admin pack
     Customer.admin_pack()
     username = session["username"]
+    Customer.update_remaining_days(username)
     # try:
     # group_id = Dialog.get_group_id(username)
     (
@@ -246,18 +268,11 @@ def index():
         clone_limit,
         effective_days,
         vip_pack,
-        effective_days,
+        expired_date,
+        remaining_days,
     ) = Customer.return_value(username)
-    print(
-        register_time,
-        sentences_per_day,
-        clone_limit,
-        effective_days,
-        vip_pack,
-        effective_days,
-    )
     sentences_left = Customer.sentences_check(username)
-    groups = Group.getAllGroup(session["username"])
+    groups = Group.getAllGroup(username)
 
     return render_template(
         "index.html",
@@ -269,6 +284,8 @@ def index():
         clone_limit=clone_limit,
         effective_days=effective_days,
         vip_pack=vip_pack,
+        expired_date=expired_date,
+        remaining_days=remaining_days,
     )
     # except:
     #     print("pass")

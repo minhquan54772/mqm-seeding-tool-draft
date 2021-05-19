@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 quannm.cmd
 uploaded_files/
+test.sh
